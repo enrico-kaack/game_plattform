@@ -1,34 +1,24 @@
 <html>
 <head>
     <link href="css/design.css" rel="stylesheet">
-    <script src="js/main.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/connection.js"></script>
+    
     <script>
-    var chat = io.connect('http://localhost:3000/chat');
-    var game_data = io.connect('http://localhost:3000/game_data')
-    chat.on('connect', function () {
-        chat.emit('join', "Hi", "Bob")
-        chat.emit('sendChat', 'first message')
-    });
-    chat.on('updateChat', function(username, message){
-        console.log("message received", message)
-        var item = document.createElement("div");
-        item.innerText = username + ": " + message
+    var conn = new Conn("bob", "room")
 
-        document.getElementById("chat_list").appendChild(item)
-    })
     
     function sendChat(){
         var text = document.getElementById("chat_input").value;
-        chat.emit("sendChat", text)
+        conn.sendChat(text)
 
         var item = document.createElement("div");
         item.innerText = "You: " + text
 
         document.getElementById("chat_list").appendChild(item)
     }
-
+    
 
     </script>
 </head>
