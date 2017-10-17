@@ -1,11 +1,11 @@
-function Conn(username, roomId){
-    this.roomId = roomId;
-    this.username = username;
+function Conn(){
+    this.roomId;
+    this.username;
     this.chat = io.connect('http://localhost:3000/chat');
     this.game_data = io.connect('http://localhost:3000/game_data');
     
     this.chat.on('connect', () => {
-        this.chat.emit('join', this.roomId, this.username)
+
     });
     this.chat.on('updateChat', (username, message) => {
         console.log("message received", message)
@@ -19,5 +19,11 @@ function Conn(username, roomId){
 }
 Conn.prototype.sendChat = function(text){
     this.chat.emit("sendChat", text);
+}
+
+Conn.prototype.joinRoom = function(username, roomId){
+    this.username = username;
+    this.roomId = roomId;
+    this.chat.emit('join', this.roomId, this.username);
 }
 
