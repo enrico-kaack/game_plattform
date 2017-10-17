@@ -14,6 +14,7 @@ app.get('/',function(req,res){
 
 
 //Socket.io part
+var clientsInRoom =[];
 
 var chat = io
     .of('/chat')
@@ -22,11 +23,19 @@ var chat = io
             socket.join(roomId)
             socket.room = roomId;
             socket.username = username;
-            console.log("joining room", roomId)
+            console.log(username, "joins room", roomId)
+
+            //save connected user to room
+            if (clientsInRoom[roomId] === undefined){
+                clientsInRoom[roomId] = [];
+            }
+            clientsInRoom[roomId].push({[username] : {name: username}})
+            io.of('/chat').to(roomId).emit('updateUserConnected', clientsInRoom[roomId])
         })
+
         socket.on('sendChat', function(message){
             console.log("emitting to room", socket.room, "the message", message)
-            socket.in(socket.room).emit("updateChat", socket.username, message)
+            socket.broadcast.to(socket.room).emit("updateChat", socket.username, message)
         })
     });
 

@@ -15,6 +15,8 @@ function Conn(){
         document.getElementById("chat_list").appendChild(item)
     })
 
+    this.chat.on('updateUserConnected', (data)=>updateUserList(data));
+
 
 }
 Conn.prototype.sendChat = function(text){
